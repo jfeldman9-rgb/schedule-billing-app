@@ -117,6 +117,36 @@
 </head>
 <body>
 
+<script>
+(function () {
+    const PASSWORD = "Jason123";
+
+    // Simple session memory so you don't re-enter constantly
+    if (sessionStorage.getItem("auth") === "ok") return;
+
+    const entered = prompt("Enter password:");
+    if (entered === PASSWORD) {
+        sessionStorage.setItem("auth", "ok");
+    } else {
+        document.documentElement.innerHTML = `
+            <div style="
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                height:100vh;
+                font-family:sans-serif;
+                font-size:24px;
+                background:#111;
+                color:white;
+            ">
+                Access denied
+            </div>
+        `;
+        throw new Error("Access Denied");
+    }
+})();
+</script>
+
 <div class="container">
     
     <div class="header no-print">
@@ -338,12 +368,10 @@
     }
 
     /* --------------------------------------------------------------------------
-       3. EVENT DELEGATION (THE MAGIC FIX)
+       3. EVENT DELEGATION
        -------------------------------------------------------------------------- */
     function bindEvents() {
-        // Handle all clicks safely
         document.body.addEventListener('click', function(e) {
-            // Find the closest element with a data-action attribute
             var target = e.target.closest('[data-action]');
             if (!target) return;
 
@@ -357,18 +385,15 @@
             if (action === 'toggle-theme') toggleTheme();
             if (action === 'switch-tab') setTab(payload);
             
-            // Modal controls
             if (action === 'open-add') openModal(payload);
             if (action === 'open-add-today') openModal();
             if (action === 'open-edit') openModal(null, payload);
             if (action === 'close-modal') closeModal();
             
-            // Data controls
             if (action === 'save-shift') saveShift();
             if (action === 'delete-shift') deleteShift();
         });
 
-        // Handle all input changes safely
         document.body.addEventListener('change', function(e) {
             if (e.target.id === 'fType') applyShiftDefaults();
             if (e.target.id === 'fStart' || e.target.id === 'fEnd') autoCalcHours();
@@ -443,7 +468,6 @@
         document.getElementById('uiTotalPay').innerHTML = formattedPay;
         document.getElementById('uiBillTotal').innerHTML = formattedPay;
 
-        // Draw Calendar Grid
         var grid = document.getElementById('uiCalendarGrid');
         grid.innerHTML = "";
         var firstDayIndex = new Date(y, m, 1).getDay();
@@ -462,7 +486,6 @@
                     var ddef = SHIFT_DICTIONARY[ds.type] || { css: "c-nora" };
                     var tStr = fmtTime(ds.start) + "-" + fmtTime(ds.end);
                     
-                    // Notice data-action routing. No onclick.
                     dayHtml += '<div class="shift-block ' + ddef.css + '" data-action="open-edit" data-payload="' + ds.id + '">' +
                                '<div class="shift-title">' + ds.type + '</div>' +
                                '<div class="shift-detail">' + tStr + ' (' + ds.hours + 'h)</div>' +
@@ -476,7 +499,6 @@
                               '<div class="cal-date-num">' + day + '</div>' + dayHtml + '</div>';
         }
 
-        // Draw List & Billing Tables
         var listB = document.getElementById('uiListBody');
         var billB = document.getElementById('uiBillBody');
         listB.innerHTML = ""; billB.innerHTML = "";
@@ -535,7 +557,6 @@
     }
 
     function openModal(dateString, shiftId) {
-        // If editing a shift
         if (shiftId) {
             var target = null;
             for (var i = 0; i < appState.shifts.length; i++) {
@@ -554,7 +575,6 @@
             document.getElementById('fHours').value = target.hours;
             document.getElementById('fRate').value = target.rate;
         } 
-        // If adding a new shift
         else {
             document.getElementById('modalTitle').innerHTML = "Add Shift";
             document.getElementById('btnDelete').style.display = "none";
@@ -654,4 +674,3 @@
 </script>
 </body>
 </html>
-
