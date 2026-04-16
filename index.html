@@ -208,6 +208,7 @@
             <h1 style="font-size: 36px; margin-bottom: 10px;">Jason Feldman, DO</h1>
             <h3 style="color: #52525b;">Professional Services Statement</h3>
             <p style="font-weight: bold; margin-top: 15px; font-size: 22px;" id="uiInvoicePeriod"></p>
+            <p style="color: var(--muted); font-size: 16px; margin-top: 5px;">Invoice #: <span id="uiInvNum"></span></p>
         </div>
         <table>
             <thead><tr><th>Date</th><th>Shift</th><th>Hours</th><th>Rate</th><th>Total</th></tr></thead>
@@ -301,29 +302,84 @@
     };
 
     var JASON_PRELOAD = [
-        { id: "1001", date: "2026-03-02", type: "Solo", start: "07:00", end: "21:00", hours: 14, rate: 340 },
-        { id: "1002", date: "2026-03-03", type: "Solo", start: "07:00", end: "19:00", hours: 12, rate: 340 },
-        { id: "1003", date: "2026-03-04", type: "Solo", start: "06:00", end: "17:00", hours: 11, rate: 340 },
-        { id: "1004", date: "2026-03-06", type: "Solo", start: "07:00", end: "21:00", hours: 14, rate: 340 },
-        { id: "1005", date: "2026-03-08", type: "1st Call AM", start: "07:00", end: "19:00", hours: 12, rate: 60 },
-        { id: "1006", date: "2026-03-08", type: "1st Call PM", start: "19:00", end: "07:00", hours: 12, rate: 60 },
-        { id: "1007", date: "2026-03-08", type: "Callback", start: "15:00", end: "23:30", hours: 8.5, rate: 340 },
-        { id: "1008", date: "2026-03-09", type: "4th Out", start: "07:00", end: "19:00", hours: 12, rate: 340 },
-        { id: "1009", date: "2026-03-09", type: "Night Manager", start: "19:00", end: "07:00", hours: 12.5, rate: 340 },
-        { id: "1010", date: "2026-03-10", type: "Night Manager", start: "19:00", end: "07:00", hours: 12.5, rate: 340 },
-        { id: "1011", date: "2026-03-11", type: "Night Manager", start: "19:00", end: "07:00", hours: 12.5, rate: 340 },
-        { id: "1012", date: "2026-03-12", type: "Night Manager", start: "19:00", end: "07:00", hours: 12.5, rate: 340 },
-        { id: "1013", date: "2026-03-13", type: "Night Manager", start: "19:00", end: "07:00", hours: 12.5, rate: 340 },
-        { id: "1014", date: "2026-03-14", type: "1st Call AM", start: "07:00", end: "19:00", hours: 12, rate: 60 },
-        { id: "1015", date: "2026-03-14", type: "Night Manager", start: "19:00", end: "07:00", hours: 12.5, rate: 340 },
-        { id: "1016", date: "2026-03-15", type: "Weekend Day Anes ATT", start: "07:00", end: "19:00", hours: 12, rate: 340 },
-        { id: "1017", date: "2026-03-16", type: "Solo", start: "07:00", end: "19:00", hours: 12, rate: 340 },
-        { id: "1018", date: "2026-03-17", type: "4th Out", start: "07:00", end: "19:00", hours: 12, rate: 340 },
-        { id: "1019", date: "2026-03-18", type: "4th Out", start: "07:00", end: "19:00", hours: 12, rate: 340 },
-        { id: "1020", date: "2026-03-19", type: "4th Out", start: "07:00", end: "19:00", hours: 12, rate: 340 },
-        { id: "1021", date: "2026-03-30", type: "4th Out", start: "07:00", end: "19:00", hours: 12, rate: 340 },
-        { id: "1022", date: "2026-03-30", type: "Night Manager", start: "19:00", end: "07:00", hours: 12.5, rate: 340 },
-        { id: "1023", date: "2026-03-31", type: "Night Manager", start: "19:00", end: "07:00", hours: 12.5, rate: 340 }
+        // March
+        { id: 'p1', date: '2026-03-02', type: 'Solo', start: '07:00', end: '21:00', hours: 14, rate: 340 },
+        { id: 'p2', date: '2026-03-03', type: 'Solo', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p3', date: '2026-03-04', type: 'Solo', start: '06:00', end: '17:00', hours: 11, rate: 340 },
+        { id: 'p4', date: '2026-03-06', type: 'Solo', start: '07:00', end: '21:00', hours: 14, rate: 340 },
+        { id: 'p5', date: '2026-03-08', type: '1st Call AM', start: '07:00', end: '19:00', hours: 12, rate: 60 },
+        { id: 'p6', date: '2026-03-08', type: '1st Call PM', start: '19:00', end: '07:00', hours: 12, rate: 60 },
+        { id: 'p7', date: '2026-03-08', type: 'Callback', start: '15:00', end: '23:30', hours: 8.5, rate: 340 },
+        { id: 'p8', date: '2026-03-09', type: '4th Out', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p9', date: '2026-03-09', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p10', date: '2026-03-10', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p11', date: '2026-03-11', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p12', date: '2026-03-12', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p13', date: '2026-03-13', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p14', date: '2026-03-14', type: '1st Call AM', start: '07:00', end: '19:00', hours: 12, rate: 60 },
+        { id: 'p15', date: '2026-03-14', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p16', date: '2026-03-15', type: 'Weekend Day Anes ATT', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p17', date: '2026-03-16', type: 'Solo', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p18', date: '2026-03-17', type: '4th Out', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p19', date: '2026-03-18', type: '4th Out', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p20', date: '2026-03-19', type: '4th Out', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p21', date: '2026-03-30', type: '4th Out', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p22', date: '2026-03-30', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p23', date: '2026-03-31', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+
+        // April
+        { id: 'p24', date: '2026-04-01', type: '4th Out', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p25', date: '2026-04-02', type: '4th Out', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p26', date: '2026-04-03', type: '4th Out', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p27', date: '2026-04-04', type: 'Weekend Day Anes ATT', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p28', date: '2026-04-05', type: 'LD PM', start: '19:00', end: '07:00', hours: 12, rate: 340 },
+        { id: 'p29', date: '2026-04-06', type: 'Solo', start: '07:00', end: '17:00', hours: 10, rate: 340 },
+        { id: 'p30', date: '2026-04-08', type: 'NORA', start: '07:00', end: '15:00', hours: 8, rate: 340 },
+        { id: 'p31', date: '2026-04-09', type: 'NORA', start: '07:00', end: '15:00', hours: 8, rate: 340 },
+        { id: 'p32', date: '2026-04-10', type: 'NORA', start: '07:00', end: '15:00', hours: 8, rate: 340 },
+        { id: 'p33', date: '2026-04-12', type: 'Solo', start: '19:00', end: '07:00', hours: 12, rate: 340 },
+        { id: 'p34', date: '2026-04-13', type: '4th Out', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p35', date: '2026-04-14', type: 'NORA', start: '07:00', end: '15:00', hours: 8, rate: 340 },
+        { id: 'p36', date: '2026-04-15', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p37', date: '2026-04-16', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p38', date: '2026-04-17', type: 'NORA', start: '07:00', end: '15:00', hours: 8, rate: 340 },
+        { id: 'p39', date: '2026-04-17', type: 'Solo', start: '15:00', end: '19:00', hours: 4, rate: 340 },
+        { id: 'p40', date: '2026-04-19', type: '1st Call AM', start: '07:00', end: '19:00', hours: 12, rate: 60 },
+        { id: 'p41', date: '2026-04-22', type: '4th Out', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p42', date: '2026-04-22', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p43', date: '2026-04-23', type: 'Solo', start: '19:00', end: '07:00', hours: 12, rate: 340 },
+        { id: 'p44', date: '2026-04-24', type: '4th Out', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p45', date: '2026-04-25', type: 'Weekend Day Anes ATT', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p46', date: '2026-04-25', type: 'Solo', start: '19:00', end: '07:00', hours: 12, rate: 340 },
+        { id: 'p47', date: '2026-04-27', type: '4th Out', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p48', date: '2026-04-28', type: '4th Out', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p49', date: '2026-04-29', type: '4th Out', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p50', date: '2026-04-29', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p51', date: '2026-04-30', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+
+        // May
+        { id: 'p52', date: '2026-05-01', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p53', date: '2026-05-02', type: 'Weekend Day Anes ATT', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p54', date: '2026-05-03', type: 'Weekend Day Anes ATT', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p55', date: '2026-05-03', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p56', date: '2026-05-04', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p57', date: '2026-05-05', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p58', date: '2026-05-06', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p59', date: '2026-05-07', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p60', date: '2026-05-08', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p61', date: '2026-05-09', type: 'Weekend Day Anes ATT', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p62', date: '2026-05-10', type: 'LD PM', start: '19:00', end: '07:00', hours: 12, rate: 340 },
+        { id: 'p63', date: '2026-05-11', type: 'LD PM', start: '19:00', end: '07:00', hours: 12, rate: 340 },
+        { id: 'p64', date: '2026-05-13', type: '4th Out', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p65', date: '2026-05-13', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p66', date: '2026-05-15', type: 'Solo', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p67', date: '2026-05-15', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p68', date: '2026-05-16', type: 'Solo', start: '19:00', end: '07:00', hours: 12, rate: 340 },
+        { id: 'p69', date: '2026-05-25', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p70', date: '2026-05-26', type: 'NORA', start: '07:00', end: '15:00', hours: 8, rate: 340 },
+        { id: 'p71', date: '2026-05-28', type: 'Solo', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p72', date: '2026-05-29', type: 'Solo', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p73', date: '2026-05-29', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 }
     ];
 
     /* --------------------------------------------------------------------------
@@ -331,7 +387,7 @@
        -------------------------------------------------------------------------- */
     function loadData() {
         var rawData = null;
-        try { rawData = window.localStorage.getItem('jason_master_v2'); } catch (e) {}
+        try { rawData = window.localStorage.getItem('jasonSchedule_v9'); } catch (e) {}
 
         if (rawData) {
             try { appState.shifts = JSON.parse(rawData); } 
@@ -350,7 +406,7 @@
     }
 
     function saveData() {
-        try { window.localStorage.setItem('jason_master_v2', JSON.stringify(appState.shifts)); } 
+        try { window.localStorage.setItem('jasonSchedule_v9', JSON.stringify(appState.shifts)); } 
         catch (e) {}
     }
 
@@ -437,6 +493,9 @@
         document.getElementById('calPrintTitle').innerHTML = titleStr + " Schedule";
         document.getElementById('listPrintTitle').innerHTML = titleStr + " Breakdown";
         document.getElementById('uiInvoicePeriod').innerHTML = "Billing Period: " + titleStr;
+        
+        var invMonth = (m + 1 < 10) ? '0' + (m + 1) : '' + (m + 1);
+        document.getElementById('uiInvNum').innerHTML = "JASON-" + y.toString().slice(-2) + "-" + invMonth;
 
         var monthShifts = [];
         for (var i = 0; i < appState.shifts.length; i++) {
