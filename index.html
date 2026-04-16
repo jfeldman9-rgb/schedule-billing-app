@@ -97,58 +97,45 @@
         .btn-delete { background: var(--red); color: white; width: 100%; padding: 16px; font-size: 20px; margin-top: 15px; }
         .btn-cancel { background: transparent; color: var(--muted); border: 2px solid var(--border); width: 100%; padding: 16px; font-size: 20px; margin-top: 15px; }
         
-        /* HIDE PRINT TABLE ON SCREEN */
+        /* HIDE PRINT CONTAINER ON SCREEN */
         .print-only { display: none; }
         
-        /* PRINT SPECIFIC STYLES */
+        /* PRINT SPECIFIC STYLES - MANUAL JS PAGINATION */
         @media print {
             body { background: white !important; color: black !important; font-size: 11pt; }
             .container { max-width: 100%; border: none; background: white !important; padding: 0;}
             
             /* Hide Screen Elements */
-            .no-print, .header, .stats-grid, .tab-bar, .fab, #uiCalendarGrid, .cal-header-row { display: none !important; }
+            .no-print, .header, .stats-grid, .tab-bar, .fab, #uiCalendarGrid, .cal-header-row, #calPrintTitle { display: none !important; }
             
             .view-section { display: none !important; }
             .view-section.active { display: block !important; padding: 0; }
             
             /* Show Print Elements */
             .print-only { display: block !important; }
-            .print-only-title { text-align: center; font-size: 32px; font-weight: 900; margin-top: 10px; margin-bottom: 25px; color: black; }
             
-            /* Print Table Architecture */
+            /* Manual Pagination Classes */
+            .print-page { 
+                page-break-after: always; 
+                break-after: page; 
+                margin-bottom: 20px;
+            }
+            .print-page:last-child { 
+                page-break-after: auto; 
+                break-after: auto; 
+                margin-bottom: 0;
+            }
+            
+            .print-only-title { text-align: center; font-size: 28px; font-weight: 900; margin-top: 10px; margin-bottom: 20px; color: black; }
+            
             .print-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
             .print-table th { border: 1px solid #000; padding: 8px; text-align: center; font-size: 14pt; background: #eee !important; color: #000 !important; }
             
-            .print-week { 
-                page-break-inside: avoid !important; 
-                break-inside: avoid-page !important; 
-            }
+            .print-day { width: 14.2857%; vertical-align: top; border: 1px solid #999; height: 180px; padding: 6px; }
             
-            .print-day { 
-                width: 14.2857%; 
-                vertical-align: top; 
-                border: 1px solid #999; 
-                min-height: 110px; 
-                height: 110px;
-                padding: 4px; 
-            }
-            
-            .print-shift { 
-                page-break-inside: avoid !important; 
-                break-inside: avoid-page !important; 
-                border: 1px solid #000 !important; 
-                color: black !important; 
-                -webkit-print-color-adjust: exact; 
-                print-color-adjust: exact; 
-                margin-bottom: 4px;
-                padding: 6px;
-                border-radius: 4px;
-                text-align: center;
-                box-shadow: none !important;
-            }
-            
-            .shift-title { font-size: 10pt !important; font-weight: bold; }
-            .shift-detail { font-size: 9pt !important; }
+            .print-shift { border: 1px solid #000 !important; color: black !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; margin-bottom: 4px; padding: 6px; border-radius: 4px; text-align: center; box-shadow: none !important; }
+            .shift-title { font-size: 11pt !important; font-weight: bold; }
+            .shift-detail { font-size: 10pt !important; }
             
             table:not(.print-table), table:not(.print-table) th, table:not(.print-table) td { border: 1px solid #000 !important; color: black !important; background: white !important;}
         }
@@ -231,14 +218,13 @@
     </div>
 
     <div id="view-cal" class="view-section active">
-        <h2 class="print-only print-only-title" id="calPrintTitle">Schedule</h2>
-        
-        <div class="cal-header-row">
+        <h2 class="print-only-title no-print" id="calPrintTitle">Schedule</h2>
+        <div class="cal-header-row no-print">
             <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
         </div>
-        <div class="cal-grid" id="uiCalendarGrid"></div>
+        <div class="cal-grid no-print" id="uiCalendarGrid"></div>
         
-        <table class="print-table print-only" id="printCalendar"></table>
+        <div id="printPages" class="print-only"></div>
     </div>
 
     <div id="view-list" class="view-section">
@@ -433,7 +419,7 @@
        -------------------------------------------------------------------------- */
     function loadData() {
         var rawData = null;
-        try { rawData = window.localStorage.getItem('jason_master_v12'); } catch (e) {}
+        try { rawData = window.localStorage.getItem('jason_master_v13'); } catch (e) {}
 
         if (rawData) {
             try { appState.shifts = JSON.parse(rawData); } 
@@ -452,7 +438,7 @@
     }
 
     function saveData() {
-        try { window.localStorage.setItem('jason_master_v12', JSON.stringify(appState.shifts)); } 
+        try { window.localStorage.setItem('jason_master_v13', JSON.stringify(appState.shifts)); } 
         catch (e) {}
     }
 
@@ -536,7 +522,6 @@
         var titleStr = monthNames[m] + " " + y;
         
         document.getElementById('uiMonthTitle').innerHTML = titleStr;
-        document.getElementById('calPrintTitle').innerHTML = titleStr + " Schedule";
         document.getElementById('listPrintTitle').innerHTML = titleStr + " Breakdown";
         document.getElementById('uiInvoicePeriod').innerHTML = "Billing Period: " + titleStr;
         
@@ -611,17 +596,17 @@
         }
 
         // ----------------------------------------------------
-        // BUILD PRINT CALENDAR (HTML TABLE FOR PAGINATION)
+        // BUILD PRINT CALENDAR (MANUAL JS PAGINATION)
         // ----------------------------------------------------
-        var printTable = document.getElementById('printCalendar');
-        var printHtml = '<thead><tr><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th></tr></thead><tbody>';
-        
-        var currentWeekHtml = '<tr class="print-week">';
-        var dayCount = 0;
+        var printPagesContainer = document.getElementById('printPages');
+        printPagesContainer.innerHTML = '';
 
+        var weeks = [];
+        var currentWeek = [];
+
+        // Pad beginning of first week
         for (var pb = 0; pb < firstDayIndex; pb++) {
-            currentWeekHtml += '<td class="print-day" style="border:none;"></td>';
-            dayCount++;
+            currentWeek.push(null);
         }
 
         for (var pDay = 1; pDay <= totalDays; pDay++) {
@@ -644,28 +629,58 @@
 
             if (!pFoundShift) pDayHtml = '<div style="text-align:center; color:#71717a; margin-top:20px; font-weight:bold;">Off 😊</div>';
 
-            currentWeekHtml += '<td class="print-day"><div class="cal-date-num">' + pDay + '</div>' + pDayHtml + '</td>';
-            dayCount++;
+            currentWeek.push({ day: pDay, html: pDayHtml });
 
-            if (dayCount === 7) {
-                currentWeekHtml += '</tr>';
-                printHtml += currentWeekHtml;
-                currentWeekHtml = '<tr class="print-week">';
-                dayCount = 0;
+            if (currentWeek.length === 7) {
+                weeks.push(currentWeek);
+                currentWeek = [];
             }
         }
 
-        if (dayCount > 0) {
-            while (dayCount < 7) {
-                currentWeekHtml += '<td class="print-day" style="border:none;"></td>';
-                dayCount++;
+        // Pad end of last week if necessary
+        if (currentWeek.length > 0) {
+            while (currentWeek.length < 7) {
+                currentWeek.push(null);
             }
-            currentWeekHtml += '</tr>';
-            printHtml += currentWeekHtml;
+            weeks.push(currentWeek);
         }
 
-        printHtml += '</tbody>';
-        printTable.innerHTML = printHtml;
+        // Chunk weeks into pages (2 weeks per page)
+        var pages = [];
+        var weeksPerPage = 2;
+        for (var chunk = 0; chunk < weeks.length; chunk += weeksPerPage) {
+            pages.push(weeks.slice(chunk, chunk + weeksPerPage));
+        }
+
+        // Render pages
+        var printHtml = '';
+        for (var p = 0; p < pages.length; p++) {
+            var pageWeeks = pages[p];
+            printHtml += '<div class="print-page">';
+            printHtml += '<h2 class="print-only-title">' + titleStr + ' Schedule ' + (pages.length > 1 ? '(Page ' + (p+1) + ')' : '') + '</h2>';
+            printHtml += '<table class="print-table">';
+            printHtml += '<thead><tr><th>Sun</th><th>Mon</th><th>Tue</th><th>Wed</th><th>Thu</th><th>Fri</th><th>Sat</th></tr></thead>';
+            printHtml += '<tbody>';
+            
+            for (var w = 0; w < pageWeeks.length; w++) {
+                var week = pageWeeks[w];
+                printHtml += '<tr class="print-week">';
+                for (var d = 0; d < week.length; d++) {
+                    var cell = week[d];
+                    if (cell === null) {
+                        printHtml += '<td class="print-day" style="background:#f4f4f5 !important; border:1px solid #999;"></td>';
+                    } else {
+                        printHtml += '<td class="print-day"><div class="cal-date-num">' + cell.day + '</div>' + cell.html + '</td>';
+                    }
+                }
+                printHtml += '</tr>';
+            }
+            
+            printHtml += '</tbody></table>';
+            printHtml += '</div>';
+        }
+
+        printPagesContainer.innerHTML = printHtml;
 
         // ----------------------------------------------------
         // BUILD LISTS & BILLING
@@ -845,4 +860,3 @@
 </script>
 </body>
 </html>
-
