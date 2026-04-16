@@ -411,7 +411,25 @@
         { id: 'p70', date: '2026-05-26', type: 'NORA', start: '07:00', end: '15:00', hours: 8, rate: 340 },
         { id: 'p71', date: '2026-05-28', type: 'Solo', start: '07:00', end: '19:00', hours: 12, rate: 340 },
         { id: 'p72', date: '2026-05-29', type: 'Solo', start: '07:00', end: '19:00', hours: 12, rate: 340 },
-        { id: 'p73', date: '2026-05-29', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 }
+        { id: 'p73', date: '2026-05-29', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+
+        // June
+        { id: 'p74', date: '2026-06-15', type: 'Solo', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p75', date: '2026-06-16', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p76', date: '2026-06-17', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p77', date: '2026-06-18', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p78', date: '2026-06-19', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p79', date: '2026-06-20', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p80', date: '2026-06-21', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p81', date: '2026-06-22', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p82', date: '2026-06-23', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p83', date: '2026-06-24', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p84', date: '2026-06-25', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p85', date: '2026-06-26', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p86', date: '2026-06-27', type: 'Weekend Day Anes ATT', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p87', date: '2026-06-29', type: '4th Out', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p88', date: '2026-06-29', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
+        { id: 'p89', date: '2026-06-30', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 }
     ];
 
     /* --------------------------------------------------------------------------
@@ -419,7 +437,8 @@
        -------------------------------------------------------------------------- */
     function loadData() {
         var rawData = null;
-        try { rawData = window.localStorage.getItem('jason_master_v13'); } catch (e) {}
+        // Bumped version string to v14 to force the new June data to load
+        try { rawData = window.localStorage.getItem('jason_master_v14'); } catch (e) {}
 
         if (rawData) {
             try { appState.shifts = JSON.parse(rawData); } 
@@ -438,7 +457,7 @@
     }
 
     function saveData() {
-        try { window.localStorage.setItem('jason_master_v13', JSON.stringify(appState.shifts)); } 
+        try { window.localStorage.setItem('jason_master_v14', JSON.stringify(appState.shifts)); } 
         catch (e) {}
     }
 
