@@ -53,7 +53,7 @@
         
         /* TABS */
         .tab-bar { display: flex; background: var(--surface); border-bottom: 2px solid var(--border); }
-        .tab-btn { flex: 1; text-align: center; padding: 20px 10px; background: transparent; color: var(--muted); font-size: 20px; border-radius: 0; border-bottom: 4px solid transparent; }
+        .tab-btn { flex: 1; text-align: center; padding: 20px 10px; background: transparent; color: var(--muted); font-size: 20px; border-radius: 0; border-bottom: 4px solid transparent; cursor: pointer; }
         .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
         
         .view-section { display: none; padding: 15px; }
@@ -62,10 +62,10 @@
         /* CALENDAR */
         .cal-header-row { display: grid; grid-template-columns: repeat(7, 1fr); background: var(--border); text-align: center; font-weight: bold; font-size: 16px; padding: 10px 0; color: var(--text); }
         .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: var(--bg); }
-        .cal-day { background: var(--surface); min-height: 150px; padding: 8px; border: 2px solid var(--border); border-radius: 8px; display: flex; flex-direction: column; cursor: pointer; }
+        .cal-day { background: var(--surface); min-height: 150px; padding: 8px; border: 2px solid var(--border); border-radius: 8px; display: flex; flex-direction: column; cursor: pointer; overflow-y: auto; }
         .cal-date-num { font-size: 32px; font-weight: 900; margin-bottom: 8px; color: var(--text); }
         
-        .shift-block { padding: 8px; border-radius: 6px; border: 1px solid rgba(0,0,0,0.2); margin-bottom: 6px; text-align: center; cursor: pointer; color: #000; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .shift-block { padding: 10px 8px; border-radius: 6px; border: 1px solid rgba(0,0,0,0.2); margin-bottom: 6px; text-align: center; cursor: pointer; color: #000; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
         [data-theme="dark"] .shift-block { color: #fff; border: 1px solid rgba(255,255,255,0.1); }
         .shift-title { font-weight: bold; font-size: 18px; line-height: 1.1; pointer-events: none;}
         .shift-detail { font-size: 14px; margin-top: 4px; pointer-events: none;}
@@ -78,7 +78,7 @@
         .invoice-header { text-align: center; margin-bottom: 30px; padding: 20px; border: 2px solid var(--border); border-radius: 8px; background: var(--surface); }
         
         /* FLOATING ADD BUTTON */
-        .fab { position: fixed; bottom: 40px; right: 40px; background: var(--blue); color: white; width: 70px; height: 70px; border-radius: 35px; font-size: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.4); z-index: 90; }
+        .fab { position: fixed; bottom: 40px; right: 40px; background: var(--blue); color: white; width: 70px; height: 70px; border-radius: 35px; font-size: 40px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0,0,0,0.4); z-index: 90; cursor: pointer; }
         
         /* MODAL */
         .modal-bg { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.8); z-index: 100; align-items: center; justify-content: center; padding: 20px; }
@@ -91,12 +91,15 @@
         .btn-cancel { background: transparent; color: var(--muted); border: 2px solid var(--border); width: 100%; padding: 16px; font-size: 20px; margin-top: 15px; }
         
         /* PRINT STYLES */
+        .print-only-title { display: none; text-align: center; font-size: 32px; font-weight: 900; margin-top: 10px; margin-bottom: 25px; color: black; }
+        
         @media print {
             body { background: white !important; color: black !important; font-size: 14pt; }
             .container { max-width: 100%; border: none; background: white !important;}
             .no-print, .header, .stats-grid, .tab-bar, .fab { display: none !important; }
             .view-section { display: none !important; }
             .view-section.active { display: block !important; padding: 0; }
+            .print-only-title { display: block !important; }
             .cal-day { border: 1px solid #000; page-break-inside: avoid; background: white !important;}
             .cal-date-num { color: black !important; }
             .shift-block { border: 1px solid #000; color: black !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
@@ -188,7 +191,7 @@
     </div>
 
     <div id="view-cal" class="view-section active">
-        <h2 style="display:none; text-align:center; margin-bottom:20px;" class="print-only-title" id="calPrintTitle">Schedule</h2>
+        <h2 class="print-only-title" id="calPrintTitle">Schedule</h2>
         <div class="cal-header-row">
             <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
         </div>
@@ -196,7 +199,7 @@
     </div>
 
     <div id="view-list" class="view-section">
-        <h2 style="display:none; text-align:center; margin-bottom:20px;" class="print-only-title" id="listPrintTitle">Shift Breakdown</h2>
+        <h2 class="print-only-title" id="listPrintTitle">Shift Breakdown</h2>
         <table>
             <thead><tr><th>Date</th><th>Shift</th><th>Times</th><th>Hours</th></tr></thead>
             <tbody id="uiListBody"></tbody>
@@ -372,13 +375,13 @@
         { id: 'p63', date: '2026-05-11', type: 'LD PM', start: '19:00', end: '07:00', hours: 12, rate: 340 },
         { id: 'p64', date: '2026-05-13', type: '4th Out', start: '07:00', end: '19:00', hours: 12, rate: 340 },
         { id: 'p65', date: '2026-05-13', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
-        { id: 'p66', date: '2026-05-15', type: 'Solo', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p66', date: '2026-05-15', type: 'Solo', start: '07:00', end: '19:00', hours: 12, rate: 340 }, // 7A-5P bumped to 12h
         { id: 'p67', date: '2026-05-15', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
         { id: 'p68', date: '2026-05-16', type: 'Solo', start: '19:00', end: '07:00', hours: 12, rate: 340 },
         { id: 'p69', date: '2026-05-25', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
         { id: 'p70', date: '2026-05-26', type: 'NORA', start: '07:00', end: '15:00', hours: 8, rate: 340 },
         { id: 'p71', date: '2026-05-28', type: 'Solo', start: '07:00', end: '19:00', hours: 12, rate: 340 },
-        { id: 'p72', date: '2026-05-29', type: 'Solo', start: '07:00', end: '19:00', hours: 12, rate: 340 },
+        { id: 'p72', date: '2026-05-29', type: 'Solo', start: '07:00', end: '19:00', hours: 12, rate: 340 }, // 7A-5P bumped to 12h
         { id: 'p73', date: '2026-05-29', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 }
     ];
 
@@ -387,7 +390,7 @@
        -------------------------------------------------------------------------- */
     function loadData() {
         var rawData = null;
-        try { rawData = window.localStorage.getItem('jasonSchedule_v9'); } catch (e) {}
+        try { rawData = window.localStorage.getItem('jason_master_v10'); } catch (e) {}
 
         if (rawData) {
             try { appState.shifts = JSON.parse(rawData); } 
@@ -406,7 +409,7 @@
     }
 
     function saveData() {
-        try { window.localStorage.setItem('jasonSchedule_v9', JSON.stringify(appState.shifts)); } 
+        try { window.localStorage.setItem('jason_master_v10', JSON.stringify(appState.shifts)); } 
         catch (e) {}
     }
 
