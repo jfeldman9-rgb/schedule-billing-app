@@ -94,15 +94,32 @@
         .print-only-title { display: none; text-align: center; font-size: 32px; font-weight: 900; margin-top: 10px; margin-bottom: 25px; color: black; }
         
         @media print {
-            body { background: white !important; color: black !important; font-size: 14pt; }
+            /* Reduced font size slightly to fit whole month on one page */
+            body { background: white !important; color: black !important; font-size: 11pt; }
             .container { max-width: 100%; border: none; background: white !important;}
             .no-print, .header, .stats-grid, .tab-bar, .fab { display: none !important; }
             .view-section { display: none !important; }
             .view-section.active { display: block !important; padding: 0; }
             .print-only-title { display: block !important; }
-            .cal-day { border: 1px solid #000; page-break-inside: avoid; background: white !important;}
-            .cal-date-num { color: black !important; }
-            .shift-block { border: 1px solid #000; color: black !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+            
+            /* PAGE BREAK FIXES */
+            .cal-day { 
+                display: block !important; /* Disables flexbox to prevent print bugs */
+                page-break-inside: avoid !important; 
+                break-inside: avoid !important; 
+                border: 1px solid #000; 
+                background: white !important;
+            }
+            .cal-date-num { color: black !important; margin-bottom: 4px; }
+            .shift-block { 
+                page-break-inside: avoid !important; 
+                break-inside: avoid !important; 
+                border: 1px solid #000; 
+                color: black !important; 
+                -webkit-print-color-adjust: exact; 
+                print-color-adjust: exact; 
+                margin-bottom: 4px;
+            }
             table, th, td { border: 1px solid #000; color: black !important; background: white !important;}
         }
         
@@ -375,13 +392,13 @@
         { id: 'p63', date: '2026-05-11', type: 'LD PM', start: '19:00', end: '07:00', hours: 12, rate: 340 },
         { id: 'p64', date: '2026-05-13', type: '4th Out', start: '07:00', end: '19:00', hours: 12, rate: 340 },
         { id: 'p65', date: '2026-05-13', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
-        { id: 'p66', date: '2026-05-15', type: 'Solo', start: '07:00', end: '19:00', hours: 12, rate: 340 }, // 7A-5P bumped to 12h
+        { id: 'p66', date: '2026-05-15', type: 'Solo', start: '07:00', end: '19:00', hours: 12, rate: 340 },
         { id: 'p67', date: '2026-05-15', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
         { id: 'p68', date: '2026-05-16', type: 'Solo', start: '19:00', end: '07:00', hours: 12, rate: 340 },
         { id: 'p69', date: '2026-05-25', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 },
         { id: 'p70', date: '2026-05-26', type: 'NORA', start: '07:00', end: '15:00', hours: 8, rate: 340 },
         { id: 'p71', date: '2026-05-28', type: 'Solo', start: '07:00', end: '19:00', hours: 12, rate: 340 },
-        { id: 'p72', date: '2026-05-29', type: 'Solo', start: '07:00', end: '19:00', hours: 12, rate: 340 }, // 7A-5P bumped to 12h
+        { id: 'p72', date: '2026-05-29', type: 'Solo', start: '07:00', end: '19:00', hours: 12, rate: 340 },
         { id: 'p73', date: '2026-05-29', type: 'Night Manager', start: '19:00', end: '07:00', hours: 12.5, rate: 340 }
     ];
 
